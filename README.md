@@ -12,12 +12,12 @@
             background: radial-gradient(circle, #021B79, #0575E6);
             color: white;
             margin: 0;
-            padding: 80px 0 20px;
+            padding: 0;
             min-height: 100vh;
             overflow-x: hidden;
         }
 
-        /* Fixed Bar for Title */
+        /* Fixed Bar */
         .fixed-bar {
             position: fixed;
             top: 0;
@@ -31,15 +31,7 @@
             z-index: 100;
         }
 
-        /* Heading Style */
-        .title {
-            font-family: 'Bubblegum Sans', cursive;
-            font-size: 36px;
-            font-weight: bold;
-            text-transform: uppercase;
-            color: #fff;
-            text-shadow: 0 0 15px rgba(0, 183, 255, 0.8);
-        }
+        /* Removed the title to fix unwanted text issue */
 
         /* Floating Numbers */
         .floating-numbers {
@@ -79,7 +71,7 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
-            margin-top: 20px;
+            margin-top: 80px;
             padding-bottom: 50px;
         }
 
@@ -146,10 +138,7 @@
     </style>
 </head>
 <body>
-    <!-- Fixed Bar with Title -->
-    <div class="fixed-bar">
-        <div class="title">WAY TO RISE</div>
-    </div>
+    <!-- Removed Unwanted Text -->
 
     <div class="floating-numbers" id="floating-numbers"></div>
     <div class="tree" id="tree-container"></div>
@@ -201,11 +190,9 @@
                 const boxTop = box.getBoundingClientRect().top;
 
                 if (boxTop < triggerBottom && currentScrollTop > lastScrollTop) {
-                    // Scrolling down: reveal
                     box.classList.add('visible');
                     box.classList.remove('hidden-left', 'hidden-right');
                 } else if (boxTop > triggerBottom && currentScrollTop < lastScrollTop) { 
-                    // Scrolling up: hide again
                     if (box.classList.contains('left')) {
                         box.classList.add('hidden-left');
                     } else {
