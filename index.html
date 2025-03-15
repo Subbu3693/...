@@ -28,12 +28,12 @@
             justify-content: center;
             align-items: center;
             box-shadow: 0 4px 10px rgba(0, 183, 255, 0.5);
-            z-index: 100;
+            z-index: 9999; /* Increased */
         }
 
         /* Heading Style */
         .title {
-            font-family: 'Bubblegum Sans', cursive;
+            font-family: 'Bubblegum Sans', Arial, sans-serif; /* Added fallback font */
             font-size: 36px;
             font-weight: bold;
             text-transform: uppercase;
@@ -155,86 +155,86 @@
     <div class="tree" id="tree-container"></div>
 
     <script>
-        const links = [
-            { url: "https://example1.com", text: "Branch 1" },
-            { url: "https://example2.com", text: "Branch 2" },
-            { url: "https://example3.com", text: "Branch 3" },
-            { url: "https://example4.com", text: "Branch 4" },
-            { url: "https://example5.com", text: "Branch 5" },
-            { url: "https://example6.com", text: "Branch 6" }
-        ];
+        document.addEventListener("DOMContentLoaded", () => {
+            const links = [
+                { url: "https://example1.com", text: "Branch 1" },
+                { url: "https://example2.com", text: "Branch 2" },
+                { url: "https://example3.com", text: "Branch 3" },
+                { url: "https://example4.com", text: "Branch 4" },
+                { url: "https://example5.com", text: "Branch 5" },
+                { url: "https://example6.com", text: "Branch 6" }
+            ];
 
-        const treeContainer = document.getElementById("tree-container");
+            const treeContainer = document.getElementById("tree-container");
 
-        for (let i = 0; i < links.length; i++) {
-            const row = document.createElement('div');
-            row.classList.add('row');
+            for (let i = 0; i < links.length; i++) {
+                const row = document.createElement('div');
+                row.classList.add('row');
 
-            const box = document.createElement('div');
-            box.classList.add('box');
+                const box = document.createElement('div');
+                box.classList.add('box');
 
-            // Alternate animation: left for even, right for odd
-            if (i % 2 === 0) {
-                box.classList.add('left');
-            } else {
-                box.classList.add('right');
+                // Alternate animation: left for even, right for odd
+                if (i % 2 === 0) {
+                    box.classList.add('left');
+                } else {
+                    box.classList.add('right');
+                }
+
+                const anchor = document.createElement('a');
+                anchor.href = links[i].url;
+                anchor.textContent = links[i].text;
+                anchor.target = "_blank";
+
+                box.appendChild(anchor);
+                row.appendChild(box);
+                treeContainer.appendChild(row);
             }
 
-            const anchor = document.createElement('a');
-            anchor.href = links[i].url;
-            anchor.textContent = links[i].text;
-            anchor.target = "_blank";
+            let lastScrollTop = window.scrollY;
 
-            box.appendChild(anchor);
-            row.appendChild(box);
-            treeContainer.appendChild(row);
-        }
+            function revealOnScroll() {
+                const boxes = document.querySelectorAll('.box');
+                const triggerBottom = window.innerHeight * 0.9;
+                const currentScrollTop = window.scrollY;
 
-        let lastScrollTop = window.scrollY;
+                boxes.forEach(box => {
+                    const boxTop = box.getBoundingClientRect().top;
 
-        function revealOnScroll() {
-            const boxes = document.querySelectorAll('.box');
-            const triggerBottom = window.innerHeight * 0.9;
-            const currentScrollTop = window.scrollY;
-
-            boxes.forEach(box => {
-                const boxTop = box.getBoundingClientRect().top;
-
-                if (boxTop < triggerBottom && currentScrollTop > lastScrollTop) {
-                    // Scrolling down: reveal
-                    box.classList.add('visible');
-                    box.classList.remove('hidden-left', 'hidden-right');
-                } else if (boxTop > triggerBottom && currentScrollTop < lastScrollTop) { 
-                    // Scrolling up: hide again
-                    if (box.classList.contains('left')) {
-                        box.classList.add('hidden-left');
-                    } else {
-                        box.classList.add('hidden-right');
+                    if (boxTop < triggerBottom && currentScrollTop > lastScrollTop) {
+                        box.classList.add('visible');
+                        box.classList.remove('hidden-left', 'hidden-right');
+                    } else if (boxTop > triggerBottom && currentScrollTop < lastScrollTop) { 
+                        if (box.classList.contains('left')) {
+                            box.classList.add('hidden-left');
+                        } else {
+                            box.classList.add('hidden-right');
+                        }
+                        box.classList.remove('visible');
                     }
-                    box.classList.remove('visible');
-                }
-            });
+                });
 
-            lastScrollTop = currentScrollTop;
-        }
+                lastScrollTop = currentScrollTop;
+            }
 
-        window.addEventListener('scroll', revealOnScroll);
-        revealOnScroll();
+            window.addEventListener('scroll', revealOnScroll);
+            revealOnScroll();
 
-        // Generate Floating Numbers
-        const floatingNumbers = document.getElementById("floating-numbers");
+            // Generate Floating Numbers
+            const floatingNumbers = document.getElementById("floating-numbers");
 
-        function createNumber() {
-            const num = document.createElement("div");
-            num.classList.add("number");
-            num.textContent = Math.random() > 0.5 ? "0" : "1";
-            num.style.left = `${Math.random() * 100}vw`;
-            num.style.animationDuration = `${2 + Math.random() * 2}s`;
-            floatingNumbers.appendChild(num);
-            setTimeout(() => num.remove(), 9000);
-        }
+            function createNumber() {
+                const num = document.createElement("div");
+                num.classList.add("number");
+                num.textContent = Math.random() > 0.5 ? "0" : "1";
+                num.style.left = `${Math.random() * 100}vw`;
+                num.style.animationDuration = `${2 + Math.random() * 2}s`;
+                floatingNumbers.appendChild(num);
+                setTimeout(() => num.remove(), 9000);
+            }
 
-        setInterval(createNumber, 150);
+            setInterval(createNumber, 150);
+        });
     </script>
 </body>
 </html>
