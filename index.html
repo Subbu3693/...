@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"> 
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Coding Grid</title>
     <style>
@@ -48,8 +48,8 @@
             text-shadow: 0 0 15px rgba(0, 183, 255, 0.8);
             margin: 0 auto;
         }
-	
-	/* Floating Numbers */
+
+        /* Floating Numbers */
         .floating-numbers {
             position: fixed;
             top: 0;
@@ -81,7 +81,6 @@
                 opacity: 1;
             }
         }
-
 
         /* Grid */
         .tree {
@@ -118,16 +117,23 @@
             font-size: 18px;
             font-weight: bold;
             text-align: center;
+            transform: translateX(-100%); /* Start off-screen */
+        }
+
+        .box.right {
+            transform: translateX(100%); /* Start off-screen for right */
+        }
+
+        .box.visible {
+            opacity: 1;
+            transform: translateX(0); /* Slide into view */
+            transition: transform 0.8s ease-out, opacity 0.8s ease-out;
         }
 
         .box:hover {
             transform: scale(1.05);
             box-shadow: 0 0 20px rgba(0, 255, 255, 8);
             background: rgba(0, 255, 255, 0.2);
-        }
-
-        .box.visible {
-            opacity: 1;
         }
 
         /* Modal */
@@ -158,77 +164,159 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
+            transition: background 0.3s, transform 0.3s;
+        }
+
+        .modal button:hover {
+            background: #00c3ff;
+            transform: scale(1.1);
         }
 
         .close-btn {
             background-color: red;
             color: white;
         }
-        
+
+        /* Menu */
         .menu-container {
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-}
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
 
-.menu-button {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 27px;
-    cursor: pointer;
-    padding: 30px;
-}
+        .menu-button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 27px;
+            cursor: pointer;
+            padding: 30px;
+        }
 
-.menu-dropdown {
-    display: none;
-    position: absolute;
-    right: 0;
-    top: 40px;
-    background: rgba(0, 0, 0, 0.9);
-    box-shadow: 0 4px 10px rgba(0, 183, 255, 0.5);
-    border-radius: 5px;
-    min-width: 150px;
-    text-align: left;
-}
+        .menu-dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 40px;
+            background: rgba(0, 0, 0, 0.9);
+            box-shadow: 0 4px 10px rgba(0, 183, 255, 0.5);
+            border-radius: 5px;
+            min-width: 150px;
+            text-align: left;
+        }
 
-.menu-dropdown a {
-    display: block;
-    color: white;
-    padding: 10px;
-    text-decoration: none;
-    transition: background 0.3s;
-}
+        .menu-dropdown a {
+            display: block;
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
 
-.menu-dropdown a:hover {
-    background: rgba(0, 183, 255, 0.5);
-}
+        .menu-dropdown a:hover {
+            background: rgba(0, 183, 255, 0.5);
+        }
 
-/* Show menu when button is clicked */
-.menu-container:hover .menu-dropdown {
-    display: block;
-}
+        .menu-container:hover .menu-dropdown {
+            display: block;
+        }
 
+        /* Image Container */
+        .image-container {
+            display: none;
+            position: fixed;
+            top: 60px; /* Below the fixed bar */
+            left: 0;
+            width: 100%;
+            height: calc(100vh - 60px); /* Full height minus fixed bar */
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 9998;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 183, 255, 0.7);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            margin-top: 50px;
+        }
+
+        footer a {
+            color: #00c3ff;
+            text-decoration: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .box {
+                width: 150px;
+                height: 150px;
+                font-size: 16px;
+            }
+            .title {
+                font-size: 20px;
+            }
+            .menu-button {
+                font-size: 20px;
+            }
+        }
+
+        /* Dark Mode */
+        body.light-mode {
+            background: radial-gradient(circle, #f0f0f0, #ffffff);
+            color: black;
+        }
+        .light-mode .box {
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+        }
+        .light-mode .modal {
+            background: rgba(255, 255, 255, 0.9);
+            color: black;
+        }
     </style>
 </head>
 <body>
+    <!-- Loading Animation -->
+    <div id="loading" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, #021B79, #0575E6); display: flex; justify-content: center; align-items: center; z-index: 10000;">
+        <div style="font-size: 24px; color: white;">Loading...</div>
+    </div>
+
+    <!-- Fixed Bar -->
     <div class="fixed-bar">
         <img src="https://static.vecteezy.com/system/resources/previews/013/250/804/non_2x/sunrise-3d-rendering-isometric-icon-png.png" alt="Rise" class="logo">
         <div class="title">WAY TO RISE</div>
         
+        <!-- Menu -->
         <div class="menu-container">
-    <button class="menu-button">☰</button>
-    <div class="menu-dropdown">
-        <a href="home.html">Home</a>
-        <a href="route-map.html">Route Map</a>
-        <a href="help.html">Help</a>
-    </div>
-</div>
+            <button class="menu-button">☰</button>
+            <div class="menu-dropdown">
+                <a href="#" id="home-btn">Info</a>
+                <a href="#" data-image="https://i.imgur.com/RDBCuJk.png">Route Map</a>
+                <a href="#" data-image="https://via.placeholder.com/800x400.png?text=Help+Image">Help</a>
+            </div>
+        </div>
     </div>
 
-     <div class="floating-numbers" id="floating-numbers"></div>
+    <!-- Image Container -->
+    <div class="image-container" id="image-container">
+        <img src="" alt="Selected Image" id="selected-image">
+    </div>
 
+    <!-- Floating Numbers -->
+    <div class="floating-numbers" id="floating-numbers"></div>
+
+    <!-- Grid -->
     <div class="tree" id="tree-container"></div>
 
     <!-- Modal -->
@@ -238,8 +326,25 @@
         <button class="close-btn" onclick="closeModal()">Close</button>
     </div>
 
+    <!-- Back to Top Button -->
+    <button id="back-to-top" style="position: fixed; bottom: 20px; right: 20px; background: rgba(0, 0, 0, 0.7); color: white; border: none; padding: 10px; border-radius: 50%; cursor: pointer; display: none;">↑</button>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2023 Way to Rise. All rights reserved.</p>
+        <p><a href="privacy.html">Privacy Policy</a> | <a href="terms.html">Terms of Service</a></p>
+    </footer>
+
+    <!-- Confetti Script -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.4.0/dist/confetti.browser.min.js"></script>
+
+    <!-- Main Script -->
     <script>
         document.addEventListener("DOMContentLoaded", () => {
+            // Hide loading animation
+            document.getElementById("loading").style.display = "none";
+
+            // Grid Data
             const gridData = [
                 { title: "Software Development", options: { "Learn Coding": "https://www.codecademy.com", "Join Workshop": "https://www.udemy.com", "Apply for Internship": "https://internshala.com" } },
                 { title: "Web Development", options: { "Build Website": "https://www.w3schools.com", "Take Online Course": "https://www.coursera.org", "Get Certification": "https://www.freecodecamp.org" } },
@@ -249,14 +354,19 @@
                 { title: "Cloud Computing", options: { "AWS Basics": "https://aws.amazon.com", "Google Cloud Platform": "https://cloud.google.com", "Azure Fundamentals": "https://azure.microsoft.com" } }
             ];
 
+            // Render Grid
             const treeContainer = document.getElementById("tree-container");
-
             gridData.forEach((item, i) => {
                 const row = document.createElement('div');
                 row.classList.add('row');
 
                 const box = document.createElement('div');
                 box.classList.add('box');
+                if (i % 2 === 0) {
+                    box.classList.add('left'); // Slide from left
+                } else {
+                    box.classList.add('right'); // Slide from right
+                }
                 box.textContent = item.title;
                 box.onclick = () => openModal(item.title, item.options);
 
@@ -264,6 +374,7 @@
                 treeContainer.appendChild(row);
             });
 
+            // Scroll Animation
             window.addEventListener('scroll', () => {
                 document.querySelectorAll('.box').forEach(box => {
                     const rect = box.getBoundingClientRect();
@@ -274,7 +385,8 @@
                     }
                 });
             });
-	
+
+            // Floating Numbers
             const floatingNumbers = document.getElementById("floating-numbers");
             for (let i = 0; i < 200; i++) {
                 const num = document.createElement("div");
@@ -282,12 +394,71 @@
                 num.textContent = Math.floor(Math.random() * 2);
                 num.style.left = Math.random() * 100 + "vw";
                 num.style.animationDuration = Math.random() * 5 + 2 + "s";
+                num.style.animationDelay = Math.random() * 5 + "s";
+                num.style.fontSize = Math.random() * 20 + 10 + "px";
                 floatingNumbers.appendChild(num);
             }
 
+            // Menu functionality
+            const menuLinks = document.querySelectorAll(".menu-dropdown a");
+            const imageContainer = document.getElementById("image-container");
+            const selectedImage = document.getElementById("selected-image");
+
+            menuLinks.forEach(link => {
+                link.addEventListener("click", (e) => {
+                    e.preventDefault(); // Prevent default link behavior
+                    const imageUrl = link.getAttribute("data-image");
+                    selectedImage.src = imageUrl;
+                    imageContainer.style.display = "block"; // Show the image container
+                });
+            });
+
+            // Close image container when clicking outside
+            imageContainer.addEventListener("click", () => {
+                imageContainer.style.display = "none";
+            });
+
+            // Search Bar
+            const searchBar = document.getElementById("search-bar");
+            searchBar.addEventListener("input", (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                document.querySelectorAll(".box").forEach(box => {
+                    const title = box.textContent.toLowerCase();
+                    if (title.includes(searchTerm)) {
+                        box.style.display = "flex";
+                    } else {
+                        box.style.display = "none";
+                    }
+                });
+            });
+
+            // Back to Top Button
+            const backToTop = document.getElementById("back-to-top");
+            window.addEventListener("scroll", () => {
+                if (window.scrollY > 500) {
+                    backToTop.style.display = "block";
+                } else {
+                    backToTop.style.display = "none";
+                }
+            });
+            backToTop.addEventListener("click", () => {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            });
+
+            // Dark Mode Toggle
+            const themeToggle = document.getElementById("theme-toggle");
+            themeToggle.addEventListener("click", () => {
+                document.body.classList.toggle("light-mode");
+            });
         });
 
+        // Open Modal
         function openModal(title, options) {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
             document.getElementById("modal-title").textContent = title;
             const modalContent = document.getElementById("modal-content");
             modalContent.innerHTML = "";
@@ -304,10 +475,12 @@
             document.getElementById("modal").style.display = "block";
         }
 
+        // Close Modal
         function closeModal() {
             document.getElementById("modal").style.display = "none";
         }
 
+        // Random Color Generator
         function getRandomColor() {
             const colors = ["#00c3ff", "#ff9900", "#ff33cc", "#66ff66", "#ff6666", "#ffff66"];
             return colors[Math.floor(Math.random() * colors.length)];
