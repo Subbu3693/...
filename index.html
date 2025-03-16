@@ -164,12 +164,67 @@
             background-color: red;
             color: white;
         }
+        
+        .menu-container {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.menu-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 27px;
+    cursor: pointer;
+    padding: 30px;
+}
+
+.menu-dropdown {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 40px;
+    background: rgba(0, 0, 0, 0.9);
+    box-shadow: 0 4px 10px rgba(0, 183, 255, 0.5);
+    border-radius: 5px;
+    min-width: 150px;
+    text-align: left;
+}
+
+.menu-dropdown a {
+    display: block;
+    color: white;
+    padding: 10px;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+
+.menu-dropdown a:hover {
+    background: rgba(0, 183, 255, 0.5);
+}
+
+/* Show menu when button is clicked */
+.menu-container:hover .menu-dropdown {
+    display: block;
+}
+
     </style>
 </head>
 <body>
     <div class="fixed-bar">
         <img src="https://static.vecteezy.com/system/resources/previews/013/250/804/non_2x/sunrise-3d-rendering-isometric-icon-png.png" alt="Rise" class="logo">
         <div class="title">WAY TO RISE</div>
+        
+        <div class="menu-container">
+    <button class="menu-button">☰</button>
+    <div class="menu-dropdown">
+        <a href="home.html">Home</a>
+        <a href="route-map.html">Route Map</a>
+        <a href="help.html">Help</a>
+    </div>
+</div>
     </div>
 
      <div class="floating-numbers" id="floating-numbers"></div>
