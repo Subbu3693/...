@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"> 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animated Coding Grid</title>
+    <title>Interactive Coding Grid</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap');
 
@@ -25,10 +25,17 @@
             height: 60px;
             background: rgba(0, 0, 0, 0.7);
             display: flex;
-            justify-content: center;
             align-items: center;
+            padding: 0 20px;
             box-shadow: 0 4px 10px rgba(0, 183, 255, 0.5);
             z-index: 9999;
+        }
+
+        /* Logo */
+        .logo {
+            height: 45px;
+            width: auto;
+            margin-right: 15px;
         }
 
         /* Title */
@@ -39,55 +46,10 @@
             text-transform: uppercase;
             color: #fff;
             text-shadow: 0 0 15px rgba(0, 183, 255, 0.8);
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
+            margin: 0 auto;
         }
-
-        /* Menu */
-        .menu-container {
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .menu {
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            padding: 8px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            color: white;
-            font-size: 18px;
-        }
-
-        .menu:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .dropdown {
-            display: none;
-            position: absolute;
-            right: 0;
-            background: rgba(0, 0, 0, 0.8);
-            border-radius: 8px;
-            width: 150px;
-            padding: 10px;
-            list-style: none;
-        }
-
-        .dropdown li {
-            padding: 8px;
-            color: white;
-            cursor: pointer;
-        }
-
-        .dropdown li:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        /* Floating Numbers */
+	
+	/* Floating Numbers */
         .floating-numbers {
             position: fixed;
             top: 0;
@@ -120,6 +82,8 @@
             }
         }
 
+
+        /* Grid */
         .tree {
             display: flex;
             flex-direction: column;
@@ -144,94 +108,103 @@
             justify-content: center;
             align-items: center;
             border-radius: 12px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 0 15px rgba(0, 183, 255, 0.5);
-            transition: transform 0.7s ease-out, opacity 0.7s ease-out;
+            background: rgba(255, 255, 255, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 15px rgba(0, 183, 255, 1);
+            transition: transform 0.5s ease-out, opacity 0.4s ease-out;
             cursor: pointer;
             opacity: 0;
             position: relative;
-        }
-
-        /* Animation */
-        .box.left {
-            transform: translateX(-150px);
-        }
-
-        .box.right {
-            transform: translateX(150px);
-        }
-
-        .box.visible {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .box.hidden-up {
-            transform: translateY(-50px) scale(0.8);
-            opacity: 0;
-        }
-
-        .box.hidden-down {
-            transform: translateY(50px) scale(0.8);
-            opacity: 0;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
         }
 
         .box:hover {
             transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(0, 183, 255, 0.8);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 8);
             background: rgba(0, 255, 255, 0.2);
         }
 
+        .box.visible {
+            opacity: 1;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 183, 255, 0.7);
+            text-align: center;
+            z-index: 10000;
+            width: 300px;
+        }
+
+        .modal h2 {
+            color: #00c3ff;
+            font-size: 24px;
+        }
+
+        .modal button {
+            margin: 10px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .close-btn {
+            background-color: red;
+            color: white;
+        }
     </style>
 </head>
 <body>
     <div class="fixed-bar">
+        <img src="https://static.vecteezy.com/system/resources/previews/013/250/804/non_2x/sunrise-3d-rendering-isometric-icon-png.png" alt="Rise" class="logo">
         <div class="title">WAY TO RISE</div>
-        <div class="menu-container">
-            <div class="menu" onclick="toggleMenu()">☰ Menu</div>
-            <ul class="dropdown" id="dropdown">
-                <li onclick="alert('Option 1 Selected')">Home</li>
-                <li onclick="alert('Option 2 Selected')">Contact Services</li>
-                <li onclick="alert('Option 3 Selected')">Help</li>
-            </ul>
-        </div>
     </div>
 
-    <div class="floating-numbers" id="floating-numbers"></div>
+     <div class="floating-numbers" id="floating-numbers"></div>
+
     <div class="tree" id="tree-container"></div>
 
-    <script>
-        function toggleMenu() {
-            const dropdown = document.getElementById("dropdown");
-            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
-        }
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <h2 id="modal-title"></h2>
+        <div id="modal-content"></div>
+        <button class="close-btn" onclick="closeModal()">Close</button>
+    </div>
 
+    <script>
         document.addEventListener("DOMContentLoaded", () => {
-            const links = [
-                { url: "#", text: "Branch 1" },
-                { url: "#", text: "Branch 2" },
-                { url: "#", text: "Branch 3" },
-                { url: "#", text: "Branch 4" },
-                { url: "#", text: "Branch 5" },
-                { url: "#", text: "Branch 6" }
+            const gridData = [
+                { title: "Software Development", options: { "Learn Coding": "https://www.codecademy.com", "Join Workshop": "https://www.udemy.com", "Apply for Internship": "https://internshala.com" } },
+                { title: "Web Development", options: { "Build Website": "https://www.w3schools.com", "Take Online Course": "https://www.coursera.org", "Get Certification": "https://www.freecodecamp.org" } },
+                { title: "AI & ML", options: { "Explore AI Projects": "https://ai.google", "Join AI Community": "https://towardsdatascience.com", "Read Research Papers": "https://arxiv.org" } },
+                { title: "Cybersecurity", options: { "Secure Your Data": "https://www.cyberaware.gov.uk", "Ethical Hacking": "https://www.eccouncil.org", "Cyber Awareness Training": "https://www.sans.org" } },
+                { title: "Data Science", options: { "Analyze Data": "https://www.kaggle.com", "Machine Learning Basics": "https://www.tensorflow.org", "Big Data Techniques": "https://hadoop.apache.org" } },
+                { title: "Cloud Computing", options: { "AWS Basics": "https://aws.amazon.com", "Google Cloud Platform": "https://cloud.google.com", "Azure Fundamentals": "https://azure.microsoft.com" } }
             ];
 
             const treeContainer = document.getElementById("tree-container");
 
-            links.forEach((link, i) => {
+            gridData.forEach((item, i) => {
                 const row = document.createElement('div');
                 row.classList.add('row');
 
                 const box = document.createElement('div');
-                box.classList.add('box', i % 2 === 0 ? 'left' : 'right');
+                box.classList.add('box');
+                box.textContent = item.title;
+                box.onclick = () => openModal(item.title, item.options);
 
-                const anchor = document.createElement('a');
-                anchor.href = link.url;
-                anchor.textContent = link.text;
-                anchor.target = "_blank";
-
-                box.appendChild(anchor);
                 row.appendChild(box);
                 treeContainer.appendChild(row);
             });
@@ -246,7 +219,8 @@
                     }
                 });
             });
-             const floatingNumbers = document.getElementById("floating-numbers");
+	
+            const floatingNumbers = document.getElementById("floating-numbers");
             for (let i = 0; i < 200; i++) {
                 const num = document.createElement("div");
                 num.classList.add("number");
@@ -255,7 +229,34 @@
                 num.style.animationDuration = Math.random() * 5 + 2 + "s";
                 floatingNumbers.appendChild(num);
             }
+
         });
+
+        function openModal(title, options) {
+            document.getElementById("modal-title").textContent = title;
+            const modalContent = document.getElementById("modal-content");
+            modalContent.innerHTML = "";
+
+            Object.keys(options).forEach(option => {
+                const btn = document.createElement("button");
+                btn.textContent = option;
+                btn.onclick = () => window.open(options[option], "_blank");
+                btn.style.background = getRandomColor();
+                btn.style.color = "black";
+                modalContent.appendChild(btn);
+            });
+
+            document.getElementById("modal").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("modal").style.display = "none";
+        }
+
+        function getRandomColor() {
+            const colors = ["#00c3ff", "#ff9900", "#ff33cc", "#66ff66", "#ff6666", "#ffff66"];
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
     </script>
 </body>
 </html>
