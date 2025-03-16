@@ -17,7 +17,7 @@
             overflow-x: hidden;
         }
 
-        /* Fixed Bar for Title */
+        /* Fixed Bar */
         .fixed-bar {
             position: fixed;
             top: 0;
@@ -28,17 +28,63 @@
             justify-content: center;
             align-items: center;
             box-shadow: 0 4px 10px rgba(0, 183, 255, 0.5);
-            z-index: 9999; /* Increased */
+            z-index: 9999;
         }
 
-        /* Heading Style */
+        /* Title */
         .title {
-            font-family: 'Bubblegum Sans', Arial, sans-serif; /* Added fallback font */
-            font-size: 36px;
+            font-family: 'Bubblegum Sans', cursive;
+            font-size: 28px;
             font-weight: bold;
             text-transform: uppercase;
             color: #fff;
             text-shadow: 0 0 15px rgba(0, 183, 255, 0.8);
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Menu */
+        .menu-container {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .menu {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: white;
+            font-size: 18px;
+        }
+
+        .menu:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 8px;
+            width: 150px;
+            padding: 10px;
+            list-style: none;
+        }
+
+        .dropdown li {
+            padding: 8px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .dropdown li:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
 
         /* Floating Numbers */
@@ -101,18 +147,19 @@
             background: rgba(255, 255, 255, 0.1);
             border: 2px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 0 15px rgba(0, 183, 255, 0.5);
-            transition: transform 0.8s ease-out, opacity 0.8s ease-out;
+            transition: transform 0.7s ease-out, opacity 0.7s ease-out;
             cursor: pointer;
             opacity: 0;
+            position: relative;
         }
 
-        /* Animation classes */
+        /* Animation */
         .box.left {
-            transform: translateX(-100px);
+            transform: translateX(-150px);
         }
 
         .box.right {
-            transform: translateX(100px);
+            transform: translateX(150px);
         }
 
         .box.visible {
@@ -120,120 +167,94 @@
             transform: translateX(0);
         }
 
-        .box.hidden-left {
+        .box.hidden-up {
+            transform: translateY(-50px) scale(0.8);
             opacity: 0;
-            transform: translateX(-100px);
         }
 
-        .box.hidden-right {
+        .box.hidden-down {
+            transform: translateY(50px) scale(0.8);
             opacity: 0;
-            transform: translateX(100px);
         }
 
         .box:hover {
             transform: scale(1.05);
             box-shadow: 0 0 20px rgba(0, 183, 255, 0.8);
-            background: rgba(0, 183, 255, 0.2);
-        }
-
-        a {
-            text-decoration: none;
-            color: white;
-            font-weight: bold;
-            font-size: 18px;
+            background: rgba(0, 255, 255, 0.2);
         }
 
     </style>
 </head>
 <body>
-    <!-- Fixed Bar with Title -->
     <div class="fixed-bar">
         <div class="title">WAY TO RISE</div>
+        <div class="menu-container">
+            <div class="menu" onclick="toggleMenu()">☰ Menu</div>
+            <ul class="dropdown" id="dropdown">
+                <li onclick="alert('Option 1 Selected')">Home</li>
+                <li onclick="alert('Option 2 Selected')">Contact Services</li>
+                <li onclick="alert('Option 3 Selected')">Help</li>
+            </ul>
+        </div>
     </div>
 
     <div class="floating-numbers" id="floating-numbers"></div>
     <div class="tree" id="tree-container"></div>
 
     <script>
+        function toggleMenu() {
+            const dropdown = document.getElementById("dropdown");
+            dropdown.style.display = dropdown.style.display === "block" ? "none" : "block";
+        }
+
         document.addEventListener("DOMContentLoaded", () => {
             const links = [
-                { url: "https://example1.com", text: "Branch 1" },
-                { url: "https://example2.com", text: "Branch 2" },
-                { url: "https://example3.com", text: "Branch 3" },
-                { url: "https://example4.com", text: "Branch 4" },
-                { url: "https://example5.com", text: "Branch 5" },
-                { url: "https://example6.com", text: "Branch 6" }
+                { url: "#", text: "Branch 1" },
+                { url: "#", text: "Branch 2" },
+                { url: "#", text: "Branch 3" },
+                { url: "#", text: "Branch 4" },
+                { url: "#", text: "Branch 5" },
+                { url: "#", text: "Branch 6" }
             ];
 
             const treeContainer = document.getElementById("tree-container");
 
-            for (let i = 0; i < links.length; i++) {
+            links.forEach((link, i) => {
                 const row = document.createElement('div');
                 row.classList.add('row');
 
                 const box = document.createElement('div');
-                box.classList.add('box');
-
-                // Alternate animation: left for even, right for odd
-                if (i % 2 === 0) {
-                    box.classList.add('left');
-                } else {
-                    box.classList.add('right');
-                }
+                box.classList.add('box', i % 2 === 0 ? 'left' : 'right');
 
                 const anchor = document.createElement('a');
-                anchor.href = links[i].url;
-                anchor.textContent = links[i].text;
+                anchor.href = link.url;
+                anchor.textContent = link.text;
                 anchor.target = "_blank";
 
                 box.appendChild(anchor);
                 row.appendChild(box);
                 treeContainer.appendChild(row);
-            }
+            });
 
-            let lastScrollTop = window.scrollY;
-
-            function revealOnScroll() {
-                const boxes = document.querySelectorAll('.box');
-                const triggerBottom = window.innerHeight * 0.9;
-                const currentScrollTop = window.scrollY;
-
-                boxes.forEach(box => {
-                    const boxTop = box.getBoundingClientRect().top;
-
-                    if (boxTop < triggerBottom && currentScrollTop > lastScrollTop) {
+            window.addEventListener('scroll', () => {
+                document.querySelectorAll('.box').forEach(box => {
+                    const rect = box.getBoundingClientRect();
+                    if (rect.top < window.innerHeight * 0.85 && rect.bottom > window.innerHeight * 0.15) {
                         box.classList.add('visible');
-                        box.classList.remove('hidden-left', 'hidden-right');
-                    } else if (boxTop > triggerBottom && currentScrollTop < lastScrollTop) { 
-                        if (box.classList.contains('left')) {
-                            box.classList.add('hidden-left');
-                        } else {
-                            box.classList.add('hidden-right');
-                        }
+                    } else {
                         box.classList.remove('visible');
                     }
                 });
-
-                lastScrollTop = currentScrollTop;
-            }
-
-            window.addEventListener('scroll', revealOnScroll);
-            revealOnScroll();
-
-            // Generate Floating Numbers
-            const floatingNumbers = document.getElementById("floating-numbers");
-
-            function createNumber() {
+            });
+             const floatingNumbers = document.getElementById("floating-numbers");
+            for (let i = 0; i < 200; i++) {
                 const num = document.createElement("div");
                 num.classList.add("number");
-                num.textContent = Math.random() > 0.5 ? "0" : "1";
-                num.style.left = `${Math.random() * 100}vw`;
-                num.style.animationDuration = `${2 + Math.random() * 2}s`;
+                num.textContent = Math.floor(Math.random() * 2);
+                num.style.left = Math.random() * 100 + "vw";
+                num.style.animationDuration = Math.random() * 5 + 2 + "s";
                 floatingNumbers.appendChild(num);
-                setTimeout(() => num.remove(), 9000);
             }
-
-            setInterval(createNumber, 150);
         });
     </script>
 </body>
