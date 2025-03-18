@@ -242,6 +242,92 @@
             border-radius: 10px;
             box-shadow: 0 0 15px rgba(0, 183, 255, 0.7);
         }
+        
+        /* Chatbot Container */
+.chatbot-container {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 500px;
+    height: 550px;
+    background: "https://watermark.lovepik.com/photo/40011/6130.jpg_wh1200.jpg";
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 183, 255, 0.7);
+    z-index: 10001;
+    flex-direction: column;
+}
+
+.chatbot-header {
+    background: rgba(0, 183, 255, 0.7);
+    padding: 10px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+}
+
+.close-chatbot-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.chatbot-messages {
+    flex: 1;
+    padding: 100px;
+    overflow-y: auto;
+    color: white;
+}
+
+.chatbot-input {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.chatbot-input input {
+    flex: 1;
+    padding: 5px;
+    border: none;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.chatbot-input button {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    background: #00c3ff;
+    color: white;
+    cursor: pointer;
+}
+
+.chatbot-input button:hover {
+    background: #0099cc;
+}
+
+/* Message Bubbles */
+.message {
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 5px;
+    max-width: 80%;
+}
+
+.message.user {
+    background: #00c3ff;
+    align-self: flex-end;
+}
+
+.message.bot {
+    background: rgba(255, 255, 255, 0.2);
+    align-self: flex-start;
+}
 
         /* Footer */
         footer {
@@ -307,6 +393,20 @@
             </div>
         </div>
     </div>
+<!-- Chatbot Container -->
+<div class="chatbot-container" id="chatbot-container">
+    <div class="chatbot-header">
+        <span>Chatbot</span>
+        <button class="close-chatbot-btn" onclick="closeChatbot()">×</button>
+    </div>
+    <div class="chatbot-messages" id="chatbot-messages"></div>
+    <div class="chatbot-input">
+        <input type="text" id="chatbot-input" placeholder="Type your message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<div class="tree" id="tree-container"></div>
 
     <!-- Image Container -->
     <div class="image-container" id="image-container">
@@ -346,12 +446,12 @@
 
             // Grid Data
             const gridData = [
-                { title: "Software Development", options: { "Learn Coding": "https://www.codecademy.com", "Join Workshop": "https://www.udemy.com", "Apply for Internship": "https://internshala.com" } },
-                { title: "Web Development", options: { "Build Website": "https://www.w3schools.com", "Take Online Course": "https://www.coursera.org", "Get Certification": "https://www.freecodecamp.org" } },
-                { title: "AI & ML", options: { "Explore AI Projects": "https://ai.google", "Join AI Community": "https://towardsdatascience.com", "Read Research Papers": "https://arxiv.org" } },
-                { title: "Cybersecurity", options: { "Secure Your Data": "https://www.cyberaware.gov.uk", "Ethical Hacking": "https://www.eccouncil.org", "Cyber Awareness Training": "https://www.sans.org" } },
-                { title: "Data Science", options: { "Analyze Data": "https://www.kaggle.com", "Machine Learning Basics": "https://www.tensorflow.org", "Big Data Techniques": "https://hadoop.apache.org" } },
-                { title: "Cloud Computing", options: { "AWS Basics": "https://aws.amazon.com", "Google Cloud Platform": "https://cloud.google.com", "Azure Fundamentals": "https://azure.microsoft.com" } }
+                { title: "Software Development", options: { "Learn Coding": "https://www.codecademy.com", "Join Workshop": "https://www.udemy.com", "Apply for Internship": "https://internshala.com" ,"Contact Agent":"use this contact for any queries (630433662)"} },
+                { title: "Web Development", options: { "Build Website": "https://www.w3schools.com", "Take Online Course": "https://www.coursera.org", "Get Certification": "https://www.freecodecamp.org","Contact Agent":"" } },
+                { title: "AI & ML", options: { "Explore AI Projects": "https://ai.google", "Join AI Community": "https://towardsdatascience.com", "Read Research Papers": "https://arxiv.org","Contact Agent":"" } },
+                { title: "Cybersecurity", options: { "Secure Your Data": "https://www.cyberaware.gov.uk", "Ethical Hacking": "https://www.eccouncil.org", "Cyber Awareness Training": "https://www.sans.org","Contact Agent":"" } },
+                { title: "Data Science", options: { "Analyze Data": "https://www.kaggle.com", "Machine Learning Basics": "https://www.tensorflow.org", "Big Data Techniques": "https://hadoop.apache.org","Contact Agent":"" } },
+                { title: "Cloud Computing", options: { "AWS Basics": "https://aws.amazon.com", "Google Cloud Platform": "https://cloud.google.com", "Azure Fundamentals": "https://azure.microsoft.com","Contact Agent":"" } }
             ];
 
             // Render Grid
@@ -485,6 +585,71 @@
             const colors = ["#00c3ff", "#ff9900", "#ff33cc", "#66ff66", "#ff6666", "#ffff66"];
             return colors[Math.floor(Math.random() * colors.length)];
         }
+        
+        // Chatbot functionality
+let chatbotOpen = false;
+
+// Open chatbot when Help is clicked
+document.querySelector('.menu-dropdown a[data-image="https://via.placeholder.com/800x400.png?text=Help+Image"]').addEventListener("click", (e) => {
+    e.preventDefault();
+    document.getElementById("chatbot-container").style.display = "flex";
+    chatbotOpen = true;
+});
+
+// Close chatbot
+function closeChatbot() {
+    document.getElementById("chatbot-container").style.display = "none";
+    chatbotOpen = false;
+}
+
+// Send message
+function sendMessage() {
+    const input = document.getElementById("chatbot-input");
+    const message = input.value.trim();
+    if (message === "") return;
+
+    // Add user message
+    const userMessage = document.createElement("div");
+    userMessage.classList.add("message", "user");
+    userMessage.textContent = message;
+    document.getElementById("chatbot-messages").appendChild(userMessage);
+
+    // Clear input
+    input.value = "";
+
+    // Simulate bot response
+    setTimeout(() => {
+        const botMessage = document.createElement("div");
+        botMessage.classList.add("message", "bot");
+        botMessage.textContent = getBotResponse(message);
+        document.getElementById("chatbot-messages").appendChild(botMessage);
+
+        // Scroll to bottom
+        const messagesContainer = document.getElementById("chatbot-messages");
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }, 500);
+}
+
+// Simple bot response logic
+function getBotResponse(message) {
+    const lowerMessage = message.toLowerCase();
+    if (lowerMessage.includes("contact number") ) {
+        return "6304336652";
+    } else if (lowerMessage.includes("help")) {
+        return "Sure! What do you need help with?";
+    } else if (lowerMessage.includes("thank")) {
+        return "You're welcome! 😊";
+    }else if(lowerMessage.includes("hi") || lowerMessage.includes("hello")){
+      return "Hello! How can I help you today?";
+    }else if(lowerMessage.includes("location")){
+      return "Your current location : \nDTI Lab in ECS block,\n Inside GPREC,\nKURNOOL - 518007,\nA.P,\nINDIA.";
+    }else if(lowerMessage.includes("who is god of you")){
+      return "your DTI teacher";
+    }
+    else {
+        return "I'm sorry, I didn't understand that. Can you please clarify?";
+    }
+}
     </script>
 </body>
 </html>
